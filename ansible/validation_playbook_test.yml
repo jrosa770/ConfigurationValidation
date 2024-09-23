@@ -1,0 +1,20 @@
+---
+- name: Assert Test
+  hosts: localhost
+  connection: local
+
+  vars_files:
+    - './vars/policies.yml'
+
+  tasks:
+
+    - block:
+        - name: process config file
+          shell: cat test_files/output.txt
+          register: device_cfg
+      rescue:
+        - name: log on error...
+          debug: msg={{ device_cfg['msg'] }}
+
+    - import_tasks: imported_tasks/check_policies.yml
+...

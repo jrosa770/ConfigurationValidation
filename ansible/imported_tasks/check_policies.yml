@@ -1,0 +1,16 @@
+---
+- block:
+    - name: Read AAA lines and assert
+      ansible.builtin.assert:
+        that: 
+          - "item in device_cfg.stdout"
+        fail_msg: "Configuration parameter missing. Check for upcoming corrective action"
+        success_msg: "Configuration parameter found."
+      with_items:
+        - "{{ ios_aaa_tacacs }}"
+  rescue:
+    - name: Perform Corrective Action when Failed
+      cisco.ios.ios_config: 
+        lines: "{{ item }}"
+      with_items: "{{ ios_aaa_tacacs }}"
+...

@@ -1,0 +1,26 @@
+---
+# Validation Plybook/ Task Caller
+# Author: Jose Rosa
+- name: compliance validation
+  hosts: world_net
+  order: shuffle
+  gather_facts: false
+  serial: 50
+
+  vars_files:
+    - './vars/policies.yml'
+
+  tasks:
+
+    - block:
+        - name: process config file
+          cisco.ios.ios_facts:
+            gather_subset: config
+          register: device_cfg
+      rescue:
+        - name: log on error...
+          debug: msg={{ device_cfg['msg'] }}
+
+
+    - import_tasks: imported_tasks/check_policies.yml
+...

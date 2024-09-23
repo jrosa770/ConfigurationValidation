@@ -1,0 +1,30 @@
+# See Notes
+
+aaa new-model
+!
+aaa group server tacacs+ ISE-TACACS
+ server name tac1
+ server name tac2
+!
+aaa authentication login default group ISE-TACACS local
+aaa authentication enable default group ISE-TACACS enable
+aaa authentication console local
+aaa authorization config-commands
+aaa authorization exec default group ISE-TACACS if-authenticated 
+aaa authorization commands 7 default group ISE-TACACS local if-authenticated 
+aaa authorization commands 15 default group ISE-TACACS local if-authenticated 
+aaa accounting exec default start-stop group ISE-TACACS
+aaa accounting commands 7 default start-stop group ISE-TACACS
+aaa accounting commands 15 default start-stop group ISE-TACACS
+!
+tacacs-server directed-request
+tacacs server tac1
+ address ipv4 10.0.0.1
+ key 123456789
+!
+tacacs server tac2
+ address ipv4 10.0.0.2
+ key 123456789
+!
+ip tacacs source-interface Loopback0 
+
