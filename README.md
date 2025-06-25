@@ -16,12 +16,17 @@ Let’s walk through the core elements of the playbook.
 
 > Key Highlights
 
-    1. Inventory Targeting The playbook runs against a host group named cisco, as defined in your Ansible inventory.
-    2. External Variable File A pointer is provided to ./vars/policies.yml, which should contain expected configuration lines in a structured YAML format.
-    3. Authentication Task Inclusion A separate set of login or session initialization tasks is imported via default-authentication-tasks.yml.
-    4. Configuration Gathering The cisco.ios.ios_facts module is used to extract the device’s current configuration using the config subset. The result is stored in the variable device_cfg.
-    5. Error Handling A rescue block ensures that any failure during configuration retrieval is gracefully captured and logged for troubleshooting.
-    6. Policy Checking After collecting the device configuration, the playbook imports another task file—check_policies.yml—that performs compliance checks using assertions.
+1.  Inventory Targeting The playbook runs against a host group named cisco, as defined in your Ansible inventory.
+
+2. External Variable File A pointer is provided to ./vars/policies.yml, which should contain expected configuration lines in a structured YAML format.
+
+3. Authentication Task Inclusion A separate set of login or session initialization tasks is imported via default-authentication-tasks.yml.
+
+4. Configuration Gathering The cisco.ios.ios_facts module is used to extract the device’s current configuration using the config subset. The result is stored in the variable device_cfg.
+
+5. Error Handling A rescue block ensures that any failure during configuration retrieval is gracefully captured and logged for troubleshooting.
+
+6. Policy Checking After collecting the device configuration, the playbook imports another task file—check_policies.yml—that performs compliance checks using assertions.
 
 ### Purpose of check_policies.yml
 
