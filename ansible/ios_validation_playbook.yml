@@ -1,8 +1,8 @@
 ---
-# Validation Plybook/ Task Caller
+# Validation Playbook / Task Caller
 # Author: Jose Rosa
 - name: compliance validation
-  hosts: world_net
+  hosts: cisco
   order: shuffle
   gather_facts: false
   serial: 50
@@ -11,16 +11,18 @@
     - './vars/policies.yml'
 
   tasks:
+    - name: Include Authentication Tasks
+      ansible.builtin.import_tasks: imported_tasks/default-authentication-tasks.yml
 
     - block:
-        - name: process config file
+        - name: Process Config File
           cisco.ios.ios_facts:
             gather_subset: config
           register: device_cfg
       rescue:
-        - name: log on error...
-          debug: msg={{ device_cfg['msg'] }}
+        - name: Log Error
+          debug:
+            msg: "{{ device_cfg['msg'] }}"
 
-
-    - import_tasks: imported_tasks/check_policies.yml
+    - ansible.builtin.import_tasks: imported_tasks/check_policies.yml
 ...

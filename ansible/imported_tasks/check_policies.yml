@@ -1,16 +1,31 @@
 ---
-- block:
-    - name: Read AAA lines and assert
-      ansible.builtin.assert:
-        that: 
-          - "item in device_cfg.stdout"
-        fail_msg: "Configuration parameter missing. Check for upcoming corrective action"
-        success_msg: "Configuration parameter found."
-      with_items:
-        - "{{ ios_aaa_tacacs }}"
-  rescue:
-    - name: Perform Corrective Action when Failed
-      cisco.ios.ios_config: 
-        lines: "{{ item }}"
-      with_items: "{{ ios_aaa_tacacs }}"
+ios_domain:
+    - 'ip domain-lookup'
+    - 'ip name-server 208.67.222.222 208.67.220.220'
+ios_aaa_tacacs:
+    - 'aaa new-model'
+    - 'aaa group server tacacs+ TACACS'
+    - ' server name tac01'
+    - ' server name tac02'
+    - 'aaa authentication login default group TACACS local'
+    - 'aaa authentication enable default group TACACS enable'
+    - 'aaa authentication console local'
+    - 'aaa authorization config-commands'
+    - 'aaa authorization exec default group TACACS if-authenticated'
+    - 'aaa authorization commands 7 default group TACACS local if-authenticated'
+    - 'aaa authorization commands 15 default group TACACS local if-authenticated'
+    - 'aaa accounting exec default start-stop group TACACS'
+    - 'aaa accounting commands 7 default start-stop group TACACS'
+    - 'aaa accounting commands 15 default start-stop group TACACS'
+    - 'tacacs-server directed-request'
+    - 'tacacs server tac01'
+    - ' address ipv4 10.0.0.1'
+    - ' key 7 123456789'
+    - 'tacacs server tac02'
+    - ' address ipv4 10.0.0.2'
+    - ' key 7 123456789'
+    - 'ip tacacs source-interface Loopback0'
+ios_ntp:
+    - 'ntp peer 10.1.1.1'
+    - 'ntp peer 10.2.2.2'
 ...
