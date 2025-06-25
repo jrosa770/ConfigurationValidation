@@ -98,3 +98,9 @@ assert → checks line presence
      ↓           ↘
 continue     rescue → optional fix + log to file
 ```
+
+## 👤 Author
+Jose Rosa
+
+## 📘 License
+MIT License 
