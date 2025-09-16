@@ -1,0 +1,66 @@
+---
+- block:
+
+    - debug:
+        msg: "Validation Tests Completed"
+
+    - name: 
+      ansible.builtin.lineinfile:
+        path: "{{ csv_failure_report_ios }}"
+        state: absent
+        regex: '^\s*$'
+
+    - name: Find CHMOD
+      ansible.builtin.command: 'which chmod'
+      register: local_chmod
+    
+    - name: Find Python3
+      ansible.builtin.command: 'which python3'
+      register: local_python3
+
+    - name: Find Local Path
+      ansible.builtin.command: 'which pwd'
+      register: local_pwd
+
+    - name: Run chmod for Python Script
+      ansible.builtin.command: "{{ local_chmod.stdout }} +x python_bin/convert_to_xls.py"
+
+    - name: Run CSV to Excel Conversion Script
+      ansible.builtin.command: "{{ local_python3.stdout }} python_bin/convert_to_xls.py {{ csv_failure_report_ios }} {{ xlsx_failure_report_ios }}"
+    
+  delegate_to: localhost
+  when: ansible_network_os != "cisco.nxos.nxos"
+
+- block:
+
+    - debug:
+        msg: "Validation Tests Completed"
+
+    - name: 
+      ansible.builtin.lineinfile:
+        path: "{{ csv_failure_report_nxos }}"
+        state: absent
+        regex: '^\s*$'
+
+    - name: Find CHMOD
+      ansible.builtin.command: 'which chmod'
+      register: local_chmod
+    
+    - name: Find Python3
+      ansible.builtin.command: 'which python3'
+      register: local_python3
+
+    - name: Find Local Path
+      ansible.builtin.command: 'which pwd'
+      register: local_pwd
+
+    - name: Run chmod for Python Script
+      ansible.builtin.command: "{{ local_chmod.stdout }} +x python_bin/convert_to_xls.py"
+
+    - name: Run CSV to Excel Conversion Script
+      ansible.builtin.command: "{{ local_python3.stdout }} python_bin/convert_to_xls.py {{ csv_failure_report_nxos }} {{ xlsx_failure_report_nxos }}"
+    
+  delegate_to: localhost
+  when: ansible_network_os == "cisco.nxos.nxos"
+
+...
